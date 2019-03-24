@@ -18,28 +18,32 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+
 /*
- * Knn algorithm implementation
- */
+* Knn algorithm implementation
+*/
+
 public class Knnalgorithm {
 
 	// created lists for storing training and testing datasets label and features.
 	Scanner sc = new Scanner(System.in);
 	private List<double[]> trainfeatures = new ArrayList<>();
 	private List<String> trainlabel = new ArrayList<>();
-
 	private List<double[]> testfeatures = new ArrayList<>();
 	private List<String> testlabel = new ArrayList<>();
-
-	// private List<String> unique = new ArrayList<>();
 	private Set<String> unique = new HashSet<String>();
 	private Map<String, Integer> countTopLabel = new HashMap<String, Integer>();
 	int knn_value = 1;
 	int totalNumberOfLabel = 0;
 
-	void setTest(double[] myfeature, String myLabel) {
+	void setTest(double[] myfeature, String myLabel) throws IOException {
+
+		BufferedWriter pw = new BufferedWriter(new FileWriter("TestLabel.txt"));
 		testfeatures.add(myfeature);
 		testlabel.add(myLabel);
+		pw.write(myLabel);
+		pw.close();
+		totalNumberOfLabel++;
 
 	}
 
@@ -56,26 +60,6 @@ public class Knnalgorithm {
 		unique.clear();
 		totalNumberOfLabel = 0;
 		countTopLabel.clear();
-
-	}
-
-	public void writefile() throws IOException {
-
-		// Collections.sort(scores);
-
-		int counter = 0;
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter("test2.txt"))) {
-			for (double[] p : testfeatures) {
-				for (int i = 0; i <= 4; i++) {
-					if (i == 4) {
-						writer.write(testlabel.get(counter) + "\n");
-						counter++;
-					} else {
-						writer.write(p[i] + ",");
-					}
-				}
-			}
-		}
 
 	}
 
@@ -98,6 +82,7 @@ public class Knnalgorithm {
 				trainfeatures.add(feature);
 				trainlabel.add(split[feature.length]);
 			}
+			unique.addAll(trainlabel);
 			readFile.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -134,7 +119,7 @@ public class Knnalgorithm {
 			}
 			pw.close();
 			testreadFile.close();
-			unique.addAll(testlabel);
+			// unique.addAll(trainlabel);
 
 		}
 
@@ -237,7 +222,7 @@ public class Knnalgorithm {
 		String s = rf.readLine();
 		while (s != null) {
 			String lab = label.readLine();
-			if (s.equals(lab)) {
+			if (s.equalsIgnoreCase(lab)) {
 
 			} else {
 				count++;
